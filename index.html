@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="h-screen w-screen overflow-hidden bg-[url('https://picsum.photos/1920/1080')] bg-cover bg-no-repeat bg-center">
+    <div class="h-full w-full bg-[rgba(0,0,0,0.5)] flex flex-row max-md:flex-col gap-14 justify-center items-center px-20 max-md:py-20">
+        <div class="flex flex-col gap-4 items-end max-md:items-center flex-1">
+            <div id="clock" class="text-8xl text-white"></div>
+            <div id="date" class="text-xl text-white"></div>
+        </div>
+        <div class="flex-1 flex flex-col gap-3">
+            <div id="quote" class="text-xl font-thin text-white">A beautiful quote is coming up</div>
+            <div id="author" class="text-white italic"></div>
+        </div>
+    </div>
+    <script>
+        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        var dateTime = new Date();
+        var time = (dateTime.getHours() % 12 === 0 ? 12 : dateTime.getHours() % 12) + ":" + (dateTime.getMinutes() < 10 ? "0" + dateTime.getMinutes() : dateTime.getMinutes());
+        var date = `${dateTime.getDate()} ${months[dateTime.getMonth()]} ${dateTime.getFullYear()}`;
+        document.getElementById("clock").innerHTML = time;
+        document.getElementById("date").innerHTML = date;
+        
+        setInterval(()=>{
+            dateTime = new Date();
+            var time = (dateTime.getHours() % 12 === 0 ? 12 : dateTime.getHours() % 12) + ":" + (dateTime.getMinutes()<10?"0"+dateTime.getMinutes():dateTime.getMinutes());
+            var date = `${dateTime.getDate()} ${months[dateTime.getMonth()]} ${dateTime.getFullYear()}`;
+            document.getElementById("clock").innerHTML = time;
+            document.getElementById("date").innerHTML = date;
+        }, 1000);
+    
+        var category = 'history';
+        function getQuote(params) {
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function () {
+                const data = JSON.parse(this.responseText)[0];
+                if(data){
+                    document.getElementById("quote").innerText = data.quote;
+                    document.getElementById("author").innerText = "- " + (data.author || "Unknown");
+                }
+                console.log(data);
+            }
+            xhttp.open("GET", 'https://api.api-ninjas.com/v1/quotes?category=' + category, true);
+            xhttp.setRequestHeader('X-Api-Key', 'MBpbN090IA8frTL5JDFGng==Cf2BkREmeQ0UedzR');
+            xhttp.send();
+        }
+        getQuote();
+        
+    </script>
+</body>
+</html>
